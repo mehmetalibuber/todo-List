@@ -7,42 +7,50 @@ const secondCardBody = document.querySelectorAll(".card-body")[1];
 const filter = document.querySelector("#filter");
 const clearButton = document.querySelector("#clear-todos");
 
+// site title
+document.title = "Todo List Project";
+//site icon  
+const icon = document.createElement("link");
+    icon.rel = "shortcut icon";
+    icon.type = "image/x-icon";
+    icon.href = "./websiteLogo.png";
+    document.head.appendChild(icon);
+
 eventListeners();
 
 function eventListeners() { //tüm event listenerler bu kısımda
     form.addEventListener("submit", addTodo);
     document.addEventListener("DOMContentLoaded", loadAllTodosToUI);
-    secondCardBody.addEventListener("click", deleteTodo);   
+    secondCardBody.addEventListener("click", deleteTodo);
     filter.addEventListener("keyup", filterTodos);
     clearButton.addEventListener("click", clearAllTodos);
 }
 // clear all todos
-function clearAllTodos(){
-if(confirm("Tümünü silmek istediğinizden emin misiniz?")){
-    while(todoList.firstElementChild != null){
-        todoList.removeChild(todoList.firstElementChild);
+function clearAllTodos() {
+    if (confirm("Tümünü silmek istediğinizden emin misiniz?")) {
+        while (todoList.firstElementChild != null) {
+            todoList.removeChild(todoList.firstElementChild);
+        }
+        localStorage.removeItem("todos");
     }
-    localStorage.removeItem("todos");
-}
 }
 
 // filter todos
-function filterTodos(e){
+function filterTodos(e) {
     const filterValue = e.target.value.toLowerCase();
     const listItems = document.querySelectorAll(".list-group-item");
-    listItems.forEach(function(listItem){
+    listItems.forEach(function (listItem) {
         const text = listItem.textContent.toLowerCase();
-        if(text.indexOf(filterValue) === -1){
-            listItem.setAttribute("style","display:none !important");
+        if (text.indexOf(filterValue) === -1) {
+            listItem.setAttribute("style", "display:none !important");
+        } else {
+            listItem.setAttribute("style", "display:block");
         }
-        else{
-            listItem.setAttribute("style","display:block");
-        }    
     })
 }
 // delete todo
-function deleteTodo(e){
-    if(e.target.className === "fa fa-remove"){
+function deleteTodo(e) {
+    if (e.target.className === "fa fa-remove") {
         e.target.parentElement.parentElement.remove();
         deleteTodoFromStorage(e.target.parentElement.parentElement.textContent);
         showAlert("warning", "Todo başarıyla silindi")
@@ -50,11 +58,11 @@ function deleteTodo(e){
 }
 
 //Storageden todo silme
-function deleteTodoFromStorage(deleteTodo){
+function deleteTodoFromStorage(deleteTodo) {
     let todos = getTodosFromStorage();
-    todos.forEach(function(todo,index){
-        if(todo === deleteTodo){
-            todos.splice(index,1); //arrayden değeri siliyoruz
+    todos.forEach(function (todo, index) {
+        if (todo === deleteTodo) {
+            todos.splice(index, 1); //arrayden değeri siliyoruz
         }
     })
     localStorage.setItem("todos", JSON.stringify(todos));
